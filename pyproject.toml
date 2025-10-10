@@ -26,4 +26,4 @@ enable = true
 style = "semver"
 vcs = "git"
 [tool.poetry-dynamic-versioning.substitution]
-files = ["src/pydna-interactive-utils/__init__.py"]
+files = ["src/pydna_utils/__init__.py"]
