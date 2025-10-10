@@ -19,6 +19,11 @@ from prettytable import PrettyTable
 
 cfg = load_settings()
 
+if not CONFIG_PATH.exists():
+    from .settings import save_settings
+    save_settings(cfg)
+    print(f"Saved → {CONFIG_PATH}")
+
 def open_folder(pth):
     """docstring."""
     if _sys.platform == "win32":

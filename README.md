@@ -2,7 +2,6 @@
 
 pydna-utils is a package containing utilities for [pydna](https://github.com/pydna-group/pydna?tab=readme-ov-file) facilitating interactive use.
 
-
 Install:
 
 ```bash
@@ -10,10 +9,12 @@ pip install pydna-utils
 ```
 
 pydna_utils creates a settings file where links to useful data can be placed. The platformdirs package is used to decide 
-where this file should be located. On my machine this is 
+where this file should be located. On my machine this is located at `/home/bjorn/.config/pydna/pydna_config.toml`.
 
 
-```ipython
+
+
+```python
 16:16 $ ipython
 Python 3.12.7 (main, Nov 18 2024, 08:24:06) [GCC 11.4.0]
 Type 'copyright', 'credits' or 'license' for more information
@@ -32,7 +33,7 @@ Out[2]:
 | pydna_primers | /home/bjorn/myvault/PRIMERS.md          |
 +---------------+-----------------------------------------+
 
-In [3]: !tail -9 /home/bjorn/myvault/PRIMERS.md # This file contain primer sequences that pydna can understand.
+In [3]: !tail -9 /home/bjorn/myvault/PRIMERS.md # This file contain primer sequences in a format that pydna can understand.
 
 >2_3CYC1clon
 CGATGTCGACTTAGATCTCACAGGCTTTTTTCAAG
