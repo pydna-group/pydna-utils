@@ -62,4 +62,9 @@ In [12]: from pydna_utils.myenzymes import myenzymes
 In [13]: myenzymes
 Out[13]: RestrictionBatch(['AatII', 'Acc65I', 'AflII', 'AjiI', 'BamHI', 'BglI', 'BglII', 'Bsp1407I', 'BspTI', 'BstXI', 'BsuRI', 'CaiI', 'CciNI', 'Eco147I', 'Eco31I', 'Eco32I', 'EcoRI', 'HindIII', 'KpnI', 'MluI', 'MnlI', 'MssI', 'NdeI', 'NotI', 'PacI', 'Pfl23II', 'PstI', 'PvuII', 'SacI', 'SalI', 'ScaI', 'SdaI', 'SgsI', 'SmaI', 'SmiI', 'StuI', 'XagI', 'XbaI', 'XhoI', 'XmaI', 'ZraI'])
 
+
+In [13]: from pydna_utils import open_config_file
+
+In [13]: open_config_file()  # opens the config file for editing in system text editor.
+
 ```
