@@ -24,12 +24,13 @@ import operator as _operator
 import string as _string
 import copy as _copy
 import uuid as _uuid
+from .settings import load_settings
 
 _wl = "{}{}-_.()".format(_string.ascii_letters, _string.digits)
 
-def register():
-    print("Editor plugin loaded")
-    # Optionally return objects, register functions, etc.
+
+
+cfg = load_settings()
 
 
 
@@ -56,8 +57,9 @@ class Editor:
 
     """
 
-    def __init__(self, shell_command_for_editor, tmpdir=None):
-        self.path_to_editor = shell_command_for_editor
+    def __init__(self, shell_command_for_editor = cfg.pydna_ape_url,
+                 tmpdir = None):
+        self.shell_command_for_editor = shell_command_for_editor
         self.tmpdir = tmpdir or _os.path.join(_tempfile.gettempdir(), "ApE")
         try:
             _os.makedirs(self.tmpdir)
@@ -97,7 +99,7 @@ class Editor:
             f.write(seq.format("gb"))
 
         _subprocess.Popen(
-            "{} {}".format(self.path_to_editor, tpth),
+            "{} {}".format(self.shell_command_for_editor, tpth),
             shell=True,
             stdout=_tempfile.TemporaryFile(),
             stderr=_tempfile.TemporaryFile(),
@@ -105,15 +107,6 @@ class Editor:
         _time.sleep(0.5)
 
 
-apeloader = Editor(_os.getenv("pydna_ape"))
-
-
 def ape(*args, **kwargs):
     """docstring."""
-    return apeloader.open(*args, **kwargs)
-
-def register():
-    print("Editor plugin loaded")
-    # Optionally return objects, register functions, etc.
-
-
+    return Editor().open(*args, **kwargs)

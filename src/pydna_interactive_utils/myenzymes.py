@@ -14,31 +14,14 @@ The pydna.myenzymes.myenzymes contains a new restriction batch with the enzymes 
 within the file specified.
 """
 
-import os as _os
 import re as _re
 from Bio.Restriction import AllEnzymes as _AllEnzymes
 from Bio.Restriction import RestrictionBatch as _RestrictionBatch
-import traceback as _traceback
+from .settings import load_settings
 
-_text = ""
+cfg = load_settings()
 
-
-try:
-    with open(_os.environ["pydna_enzymes"], encoding="utf-8") as _f:
-        _text = _f.read()
-except FileNotFoundError:
-    _module_logger.warning("%s not found.", _os.environ["pydna_enzymes"])
-except IsADirectoryError:
-    _module_logger.warning("%s is a directory.", _os.environ["pydna_enzymes"])
-except IOError:
-    _module_logger.warning("%s found, but could not be read.", _os.environ["pydna_enzymes"])
-except Exception:
-    _module_logger.warning(_traceback.format_exc())
-
+with open(cfg.pydna_enzymes, encoding="utf-8") as _f:
+    _text = _f.read()
 
 myenzymes = _RestrictionBatch([e for e in _AllEnzymes if str(e).lower() in _re.split(r"\W+", _text.lower())])
-
-def register():
-    print("Myenzymes plugin loaded")
-    # Optionally return objects, register functions, etc.
-

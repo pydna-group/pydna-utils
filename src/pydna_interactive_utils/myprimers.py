@@ -34,7 +34,6 @@ The primerlist funtion returns a list of :class:`pydna.primer.Primer` objects
 primerdict returns a dict where the key is the id of the object.
 """
 
-import os as _os
 import re as _re
 from typing import Iterable
 from pathlib import Path
@@ -46,6 +45,9 @@ from collections import UserList as _UserList
 from pydna.utils import open_folder as _open_folder
 from builtins import __dict__ as _kw
 
+from .settings import load_settings
+
+cfg = load_settings()
 
 class PrimerList(_UserList):
     """Read a text file with primers.
@@ -66,7 +68,7 @@ class PrimerList(_UserList):
     def __init__(
         self,
         initlist: Iterable = None,
-        path: (str, Path) = None,
+        path: (str, Path) = Path(cfg.pydna_primers),
         *args,
         identifier: str = "p",
         **kwargs,
@@ -75,10 +77,8 @@ class PrimerList(_UserList):
             self.data = initlist
             self.path = None
         else:
-            self.path = Path(path or _os.environ["pydna_primers"])
-            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.path = path
             self.data = _parse_primers(self.path.read_text())[::-1]
-        # super().__init__(*args, **kwargs)
         self.accessed_indices = []
         if identifier.isidentifier() and not _iskeyword(identifier) and identifier not in _kw:
             self.identifier = identifier
@@ -208,8 +208,3 @@ def find_duplicate_primers(pl: list = None):
     for p in pl:
         pg.setdefault(str(p.seq).upper(), []).append(p)
     return [pl for ps, pl in pg.items() if len(pl) > 1]
-
-def register():
-    print("Myprimers plugin loaded")
-    # Optionally return objects, register functions, etc.
-
