@@ -27,9 +27,6 @@ import uuid as _uuid
 from .settings import load_settings
 
 _wl = "{}{}-_.()".format(_string.ascii_letters, _string.digits)
-
-
-
 cfg = load_settings()
 
 
@@ -57,7 +54,8 @@ class Editor:
 
     """
 
-    def __init__(self, shell_command_for_editor = cfg.pydna_ape_url,
+    def __init__(self, 
+                 shell_command_for_editor,
                  tmpdir = None):
         self.shell_command_for_editor = shell_command_for_editor
         self.tmpdir = tmpdir or _os.path.join(_tempfile.gettempdir(), "ApE")
@@ -109,4 +107,4 @@ class Editor:
 
 def ape(*args, **kwargs):
     """docstring."""
-    return Editor().open(*args, **kwargs)
+    return Editor(cfg.pydna_ape_cmd).open(*args, **kwargs)

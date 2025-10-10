@@ -37,7 +37,7 @@ def open_current_folder():
 # def open_cache_folder():
 #     return open_folder(_os.environ["pydna_data_dir"])
 
-def open_config_folder(pth = CONFIG_PATH):
+def open_config_file(pth = CONFIG_PATH):
     return open_folder(pth)
 
 cfg = load_settings()

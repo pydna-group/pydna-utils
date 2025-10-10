@@ -14,7 +14,7 @@ class Settings(BaseConfig):
     model_config = ConfigDict(frozen=False)
 
     # your three persistent strings (defaults as given)
-    pydna_ape_url: str = Field(
+    pydna_ape_cmd: str = Field(
         default='/usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl'
     )
     pydna_enzymes: str = Field(
@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     changed = False
     if args.ape is not None:
-        cfg.pydna_ape_url = args.ape; changed = True
+        cfg.pydna_ape_cmd = args.ape; changed = True
     if args.enzymes is not None:
         cfg.pydna_enzymes = args.enzymes; changed = True
     if args.primers is not None:
