@@ -1,5 +1,6 @@
 [project]
 name = "pydna-utils"
+version = "0.0.0"
 description = "Utility functions to ease interactive work with pydna."
 authors = [
     { name = "Bjorn F. Johansson", email = "bjornjobb@gmail.com" }
