@@ -30,8 +30,8 @@ pydna_snapgene_cmd = "/opt/gslbiotech/snapgene/snapgene.sh"
 pydna_enzymes = "/home/bjorn/.ApE/Enzymes/LGM_group.txt"
 pydna_primers = "/home/bjorn/myvault/PRIMERS.md"
 pydna_email = "someone@example.com"
-pydna_ncbi_cache_dir = "/home/bjorn/.cache/pydna_utils" # set autmatically
-pydna_ncbi_expiration = "604800" # seven days in seconds
+pydna_ncbi_cache_dir = "/home/bjorn/.cache/pydna_utils"
+pydna_ncbi_expiration = "604800"
 ```
 
 
@@ -135,9 +135,10 @@ are impotenat for the cache to work.
 | Setting               | Value                                   |
 +-----------------------+-----------------------------------------+
 | pydna_ape_cmd         | /usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl |
+| pydna_snapgene_cmd    | /opt/gslbiotech/snapgene/snapgene.sh    |
 | pydna_enzymes         | /home/bjorn/.ApE/Enzymes/LGM_group.txt  |
 | pydna_primers         | /home/bjorn/myvault/PRIMERS.md          |
-| pydna_email           | b****l.com                     |
+| pydna_email           | b*******b@gmail.com                     |
 | pydna_ncbi_cache_dir  | /home/bjorn/.cache/pydna_utils          |
 | pydna_ncbi_expiration | 604800                                  |
 +-----------------------+-----------------------------------------+
