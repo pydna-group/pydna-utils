@@ -7,11 +7,9 @@ authors = [
 maintainers = [
     { name = "Bjorn F. Johansson", email = "bjornjobb@gmail.com" }
 ]
-
 readme = "README.md"
 license = { text = "BSD-3" }
 requires-python = ">=3.12,<4.0"
-
 dynamic = ["version"]
 
 dependencies = [
@@ -54,9 +52,6 @@ Issues = "https://github.com/BjornFJohansson/pydna-utils/issues"
 [build-system]
 requires = ["poetry-core", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
-
-#[tool.poetry]
-#version = "0.0.0"
 
 [tool.poetry-dynamic-versioning]
 enable = true
