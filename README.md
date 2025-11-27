@@ -62,7 +62,7 @@ primers when this example was created.
 
 You may not want to ship this list with your pydna code. The list may be long
 nd contain mostly irrelevant primers. It may also have information that best be
-kept inside the lab. For this reason, PrimerList remebers which primers
+kept inside the lab. For this reason, PrimerList remembers which primers
 have been accessed in a particular session and can also create pydna code
 ready to be pasted into a pydna script or notebook that contain the relevant
 part of the list. See example below:
@@ -101,7 +101,7 @@ CGATGTCGACTTAGATCTCACAGGCTTTTTTCAAG
 
 pydna_enzymes should contain a path to a text file containing restriction
 enzyme names. No particular formatting is required, but the names have to
-be separated by whitespace and exactly as they appear on
+be separated by white space and exactly as they appear on
 [REBASE](https://rebase.neb.com/rebase/rebase.html).
 
 ```python
@@ -125,7 +125,9 @@ TTTT
 ```
 
 The settings `pydna_email, pydna_ncbi_cache_dir and pydna_ncbi_expiration`
-are impotenat for the cache to work.
+are important for how the cache works. 
+The user only needs to set the email as this is a NCBI requirement. 
+
 
 
 ```python
