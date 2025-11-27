@@ -152,6 +152,3 @@ def test_find_duplicate_primers(monkeypatch):
     pl = myprimers.PrimerList(path="primers_linux_line_endings_not_unique.txt")
     assert myprimers.find_duplicate_primers(pl) == [[pl[1], pl[3]]]
 
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-vvv", "-s"])

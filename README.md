@@ -4,6 +4,11 @@ pydna-utils is a package containing utilities for
 [pydna](https://github.com/pydna-group/pydna?tab=readme-ov-file)
 facilitating interactive use.
 
+- open a Dsecrecord in the ApE plasmid editor or snapgene
+- a global PCR primer list
+- a global restriction enzyme list
+- cached access to genbank
+
 Install:
 
 ```bash
@@ -21,6 +26,7 @@ The settings file is a [TOML](https://toml.io/en/) file and has this content
 by default:
 ```
 pydna_ape_cmd = "/usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl"
+pydna_snapgene_cmd = "/opt/gslbiotech/snapgene/snapgene.sh"
 pydna_enzymes = "/home/bjorn/.ApE/Enzymes/LGM_group.txt"
 pydna_primers = "/home/bjorn/myvault/PRIMERS.md"
 pydna_email = "someone@example.com"

@@ -64,7 +64,3 @@ def test_editor_with_feature_wo_label_and_note(monkeypatch):
     del argument.features[0].qualifiers["label"]
     editor.ape(argument)
     assert Popen.called
-
-
-if __name__ == "__main__":
-    pytest.main([__file__, "-x", "-vv", "-s"])
