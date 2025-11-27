@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
-# This code is part of the Python-dna distribution and governed by its
-# license.  Please see the LICENSE.txt file that should have been included
-# as part of this package.
-"""This module provides a class for opening a sequence using an editor
-that accepts a file as a command line argument.
+
+"""A class for opening a Dseqrecord sequence objet in an editor.
 
 ApE - A plasmid Editor [#]_ is and excellent editor for this purpose.
+Snapgene - [#]_
 
 References
 ----------
@@ -54,7 +51,7 @@ class Editor:
 
     """
 
-    def __init__(self, 
+    def __init__(self,
                  shell_command_for_editor,
                  tmpdir = None):
         self.shell_command_for_editor = shell_command_for_editor
@@ -108,3 +105,7 @@ class Editor:
 def ape(*args, **kwargs):
     """docstring."""
     return Editor(cfg.pydna_ape_cmd).open(*args, **kwargs)
+
+def snapgene(*args, **kwargs):
+    """docstring."""
+    return Editor(cfg.pydna_snapgene_cmd).open(*args, **kwargs)

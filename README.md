@@ -1,6 +1,8 @@
 # ![icon](https://github.com/pydna-group/pydna-utils/blob/main/docs/_static/icon.png?raw=true)
 
-pydna-utils is a package containing utilities for [pydna](https://github.com/pydna-group/pydna?tab=readme-ov-file) facilitating interactive use.
+pydna-utils is a package containing utilities for
+[pydna](https://github.com/pydna-group/pydna?tab=readme-ov-file)
+facilitating interactive use.
 
 Install:
 
@@ -8,63 +10,133 @@ Install:
 pip install pydna-utils
 ```
 
-pydna_utils creates a settings file where links to useful data can be placed. The platformdirs package is used to decide 
-where this file should be located. On my machine this is located at `/home/bjorn/.config/pydna/pydna_config.toml`.
+pydna_utils creates a user settings file (`pydna_config.toml`) where user
+information and links to useful data can be placed.
+
+On my linux mint laptop, this is located at `/home/bjorn/.config/pydna/pydna_config.toml`.
+
+The platformdirs package is used to decide where this file should be located.
+
+The settings file is a [TOML](https://toml.io/en/) file and has this content
+by default:
+```
+pydna_ape_cmd = "/usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl"
+pydna_enzymes = "/home/bjorn/.ApE/Enzymes/LGM_group.txt"
+pydna_primers = "/home/bjorn/myvault/PRIMERS.md"
+pydna_email = "someone@example.com"
+pydna_ncbi_cache_dir = "/home/bjorn/.cache/pydna_utils" # set autmatically
+pydna_ncbi_expiration = "604800" # seven days in seconds
+```
 
 
+## pydna_utils.editor.ape starts the ApE plasmid editor.
+
+```python
+>>> from pydna_utils.editor import ape
+>>> from pydna.dseqrecord import Dseqrecord
+>>> sequence = Dseqrecord("GGATCC")
+>>> sequence.seq
+Dseq(-6)
+GGATCC
+CCTAGG
+>>> ape(sequence)
+```
+
+![ape](https://github.com/pydna-group/pydna-utils/blob/main/docs/_static/ape.png?raw=true)
+
+
+## pydna_utils.myprimers.PrimerList enables a global primer list for pydna
+
+The primer list is typically a text file containing primer sequences in
+a format that pydna understands, such as FASTA.
+
+This feature is most useful if the laboratory keeps a plain text file with
+primer sequences for all lab members. As visible below, our list had 1821
+primers when this example was created.
+
+You may not want to ship this list with your pydna code. The list may be long
+nd contain mostly irrelevant primers. It may also have information that best be
+kept inside the lab. For this reason, PrimerList remebers which primers
+have been accessed in a particular session and can also create pydna code
+ready to be pasted into a pydna script or notebook that contain the relevant
+part of the list. See example below:
+
+```python
+>>> from pydna_utils.myprimers import PrimerList
+>>> pl = PrimerList()
+>>> len(pl)
+1821
+>>> pl[1]
+1_5CYC1clone 35-mer:5'-GATCGGCCGGATCCA..CCG-3'
+>>> pl[2]
+2_3CYC1clon 35-mer:5'-CGATGTCGACTTAGA..AAG-3'
+>>> print(pl[1].format("fasta"))
+>>> print(pl[2].format("fasta"))
+>>> pl.accessed
+[1_5CYC1clone 35-mer:5'-GATCGGCCGGATCCA..CCG-3',
+ 2_3CYC1clon 35-mer:5'-CGATGTCGACTTAGA..AAG-3']
+>>> pl.code(pl.accessed)
+from pydna.parsers import parse_primers
+
+p = {}
+
+p[1], p[2] = parse_primers('''
+
+>1_5CYC1clone 35-mer
+GATCGGCCGGATCCAAATGACTGAATTCAAGGCCG
+
+>2_3CYC1clon 35-mer
+CGATGTCGACTTAGATCTCACAGGCTTTTTTCAAG
+
+''')
+```
+
+## pydna_utils.myenzymes.myenzymes enables a global restriction enzyme batch
+
+pydna_enzymes should contain a path to a text file containing restriction
+enzyme names. No particular formatting is required, but the names have to
+be separated by whitespace and exactly as they appear on
+[REBASE](https://rebase.neb.com/rebase/rebase.html).
+
+```python
+>>> from pydna_utils.myenzymes import myenzymes
+>>> myenzymes
+RestrictionBatch(['AatII', 'Acc65I', 'AflII', 'AjiI', 'BamHI', 'BglI'])
+```
+
+
+## pydna_utils.genbank.genbank is a cached version of pydna.genbank.genbank
+
+```python
+>>> from pydna_utils.genbank import genbank
+>>> gb_sequence = genbank("A23695.1")
+>>> gb_sequence
+Gbnk(-4 A23695.1)
+>>> gb_sequence.seq
+Dseq(-4)
+AAAA
+TTTT
+```
+
+The settings `pydna_email, pydna_ncbi_cache_dir and pydna_ncbi_expiration`
+are impotenat for the cache to work.
 
 
 ```python
-16:16 $ ipython
-Python 3.12.7 (main, Nov 18 2024, 08:24:06) [GCC 11.4.0]
-Type 'copyright', 'credits' or 'license' for more information
-IPython 9.6.0 -- An enhanced Interactive Python. Type '?' for help.
-Tip: You can use `files = !ls *.png`
-
-In [1]: import pydna_utils
-
-In [2]: pydna_utils.get_env()
-Out[2]: 
-+---------------+-----------------------------------------+
-| Setting       | Value                                   |
-+---------------+-----------------------------------------+
-| pydna_ape_url | /usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl |
-| pydna_enzymes | /home/bjorn/.ApE/Enzymes/LGM_group.txt  |
-| pydna_primers | /home/bjorn/myvault/PRIMERS.md          |
-+---------------+-----------------------------------------+
-
-In [3]: !tail -9 /home/bjorn/myvault/PRIMERS.md # This file contain primer sequences in a format that pydna can understand.
-
->2_3CYC1clon
-CGATGTCGACTTAGATCTCACAGGCTTTTTTCAAG
-
->1_5CYC1clone
-GATCGGCCGGATCCAAATGACTGAATTCAAGGCCG
-
->0_S1 67bp primer for amplification of GFP from pFA6a-GFPS65T-kanMX6. The last 21 bp are specific for the GFP gene in pFA6a-GFPS65T-kanMX6. The rest is homology with the 3'part of ScJEN1. This primer was used for tagging the JEN1 with GFP on the chromosome.
-GATTCGAACGTCTCAAAGACATATGAGGAGCATATTGAGACCGTTAGTAAAGGAGAAGAACTTTTC
-
-In [4]: from pydna_utils.myprimers import PrimerList
-
-In [5]: pl = PrimerList()
-
-In [6]: pl[1]
-Out[6]: 1_5CYC1clone 35-mer:5'-GATCGGCCGGATCCA..CCG-3'
-
-In [7]: type(pl[1])
-Out[7]: pydna.primer.Primer
-
-In [11]: cat /home/bjorn/.ApE/Enzymes/LGM_group.txt  # This text file contain restriction enzymes in an arbitrary format.
-LGM {AatII  Acc65I  AflII  AjiI  BamHI  BglI  BglII  Bsp1407I  BspTI  BstXI  BsuRI  CaiI  CciNI  Eco147I  Eco31I  Eco32I  EcoRI  HindIII  KpnI  MluI  MnlI  MssI  NdeI  NotI  PacI  Pfl23II  PstI  PvuII  SacI  SalI  ScaI  SdaI  SgsI  SmaI  SmiI  StuI  XagI  XbaI  XhoI  XmaI  ZraI}
-
-In [12]: from pydna_utils.myenzymes import myenzymes
-
-In [13]: myenzymes
-Out[13]: RestrictionBatch(['AatII', 'Acc65I', 'AflII', 'AjiI', 'BamHI', 'BglI', 'BglII', 'Bsp1407I', 'BspTI', 'BstXI', 'BsuRI', 'CaiI', 'CciNI', 'Eco147I', 'Eco31I', 'Eco32I', 'EcoRI', 'HindIII', 'KpnI', 'MluI', 'MnlI', 'MssI', 'NdeI', 'NotI', 'PacI', 'Pfl23II', 'PstI', 'PvuII', 'SacI', 'SalI', 'ScaI', 'SdaI', 'SgsI', 'SmaI', 'SmiI', 'StuI', 'XagI', 'XbaI', 'XhoI', 'XmaI', 'ZraI'])
-
-
-In [13]: from pydna_utils import open_config_file
-
-In [13]: open_config_file()  # opens the config file for editing in system text editor.
-
+>>> import pydna_utils
+>>> pydna_utils.get_settings()
++-----------------------+-----------------------------------------+
+| Setting               | Value                                   |
++-----------------------+-----------------------------------------+
+| pydna_ape_cmd         | /usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl |
+| pydna_enzymes         | /home/bjorn/.ApE/Enzymes/LGM_group.txt  |
+| pydna_primers         | /home/bjorn/myvault/PRIMERS.md          |
+| pydna_email           | b****l.com                     |
+| pydna_ncbi_cache_dir  | /home/bjorn/.cache/pydna_utils          |
+| pydna_ncbi_expiration | 604800                                  |
++-----------------------+-----------------------------------------+
+>>> from pydna_utils import open_config_file
+>>> open_config_file()  # opens the config file for editing in system text editor.
+>>> from pydna_utils import open_cache_folder
+>>> open_cache_folder() # opens the cache folder in system file explorer.
 ```

@@ -15,6 +15,7 @@ import sys as _sys
 import subprocess as _subprocess
 from .settings import load_settings
 from .settings import CONFIG_PATH
+from .settings import USER_CACHE_DIR
 from prettytable import PrettyTable
 
 cfg = load_settings()
@@ -24,7 +25,7 @@ if not CONFIG_PATH.exists():
     save_settings(cfg)
     print(f"Saved → {CONFIG_PATH}")
 
-def open_folder(pth):
+def _open_folder(pth):
     """docstring."""
     if _sys.platform == "win32":
         _subprocess.run(["start", pth], shell=True)
@@ -34,24 +35,19 @@ def open_folder(pth):
         try:
             _subprocess.run(["xdg-open", pth])
         except OSError:
-            return "no cache to open."
+            return "no folder to open."
 
 def open_current_folder():
-    return open_folder(_os.getcwd())
+    return _open_folder(_os.getcwd())
 
-# def open_cache_folder():
-#     return open_folder(_os.environ["pydna_data_dir"])
+def open_cache_folder(pth = USER_CACHE_DIR):
+    return _open_folder(pth)
 
 def open_config_file(pth = CONFIG_PATH):
-    return open_folder(pth)
+    return _open_folder(pth)
 
-cfg = load_settings()
-
-def get_env(cfg = cfg):
-    """Create an ascii table containing pydna settings.
-
-    Pydna related variables have names that starts with `pydna_`
-    """
+def get_settings() -> PrettyTable:
+    """Ascii table containing pydna settings."""
 
     # Convert Pydantic model to dict
     data = cfg.model_dump()
@@ -68,3 +64,4 @@ def get_env(cfg = cfg):
     table.align["Value"] = "l"
 
     return table
+

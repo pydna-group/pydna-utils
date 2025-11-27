@@ -1,37 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Copyright 2013-2023 by Björn Johansson.  All rights reserved.
-# This code is part of the Python-dna distribution and governed by its
-# license.  Please see the LICENSE.txt file that should have been included
-# as part of this package.
-"""
-Provides a practical way to access a list of primer sequences in a text file.
 
-The path of a text file can be specified in the pydna.ini file or by the
-´pydna_primers´ environment variable.
+"""Access a list of primer sequences in a text file.
 
-The file is expected to contain sequences in FASTA, Genbank or EMBL formats or
-any format readable by the parse_primers function.
+The text file is specified in the pydna_primers entry in the settings
+file pydna_config.toml.
 
-The primer list is expected to follow the convension below. The primer name is
-expected to begin with the number.
+The file is expected to contain sequences in a format readable by the
+parse_primers function such as FASTA, Genbank or EMBL formats.
 
-can have the format below for example:
+The first primer in the file becomes the last primer in the list. This is
+so that new primers can be added to the top of the text file.
 
 ::
 
-    >2_third_primer
+    >third_primer
     tgagtagtcgtagtcgtcgtat
 
-    >1_second_primer
+    >second_primer
     tgatcgtcatgctgactatactat
 
-    >0_first_primer
+    >first_primer
     ctaggatcgtagatctagctg
     ...
 
 The primerlist funtion returns a list of :class:`pydna.primer.Primer` objects
-primerdict returns a dict where the key is the id of the object.
+primerdict returns a dict where the key is the id of the primer object.
+
+
 """
 
 import re as _re

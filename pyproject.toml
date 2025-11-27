@@ -1,30 +1,68 @@
 [project]
 name = "pydna-utils"
-description = "Functions to ease using pydna interactively"
+description = "Utility functions to ease interactive work with pydna."
 authors = [
-    {name = "BjornFJohansson",email = "bjornjobb@gmail.com"}
+    { name = "Bjorn F. Johansson", email = "bjornjobb@gmail.com" }
 ]
-dynamic = ["version"]
-license = {text = "BSD-3"}
-readme = "README.md"
-requires-python = ">=3.12,<4.0"
-dependencies = [
-    "pydna (>=5.5.1,<6.0.0)",
-    "platformdirs (>=4.5.0,<5.0.0)",
-    "confz (>=2.1.0,<3.0.0)",
-    "pydantic (>=2.12.0,<3.0.0)",
-    "tomli-w (>=1.2.0,<2.0.0)",
-    "prettytable (>=3.16.0,<4.0.0)"
+maintainers = [
+    { name = "Bjorn F. Johansson", email = "bjornjobb@gmail.com" }
 ]
 
+readme = "README.md"
+license = { text = "BSD-3" }
+requires-python = ">=3.12,<4.0"
+
+dynamic = ["version"]
+
+dependencies = [
+    "pydna >=5.5.1,<6.0.0",
+    "platformdirs >=4.5.0,<5.0.0",
+    "confz >=2.1.0,<3.0.0",
+    "pydantic >=2.12.0,<3.0.0",
+    "tomli-w >=1.2.0,<2.0.0",
+    "prettytable >=3.16.0,<4.0.0",
+    "requests_cache >=1.2.1,<2.0.0"
+]
+
+keywords = [
+    "pydna",
+    "molecular-biology",
+    "dna",
+    "cloning",
+    "genbank",
+    "bioinformatics",
+    "sequence-analysis"
+]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent"
+]
+
+[project.urls]
+Homepage = "https://github.com/BjornFJohansson/pydna-utils"
+Documentation = "https://pydna-utils.readthedocs.io/"
+Repository = "https://github.com/BjornFJohansson/pydna-utils"
+Issues = "https://github.com/BjornFJohansson/pydna-utils/issues"
+
 [build-system]
-build-backend = "poetry_dynamic_versioning.backend"
 requires = ["poetry-core", "poetry-dynamic-versioning"]
-[tool.poetry-dynamic-versioning]
-enable = true
-style = "semver"
-vcs = "git"
-[tool.poetry-dynamic-versioning.substitution]
-files = ["src/pydna_utils/__init__.py"]
+build-backend = "poetry_dynamic_versioning.backend"
+
 [tool.poetry]
 version = "0.0.0"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "semver"
+
+[tool.poetry-dynamic-versioning.substitution]
+files = ["src/pydna_utils/__init__.py"]
+
