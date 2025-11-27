@@ -55,8 +55,8 @@ Issues = "https://github.com/BjornFJohansson/pydna-utils/issues"
 requires = ["poetry-core", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
 
-[tool.poetry]
-version = "0.0.0"
+#[tool.poetry]
+#version = "0.0.0"
 
 [tool.poetry-dynamic-versioning]
 enable = true
