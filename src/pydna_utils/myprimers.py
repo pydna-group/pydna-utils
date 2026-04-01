@@ -41,7 +41,7 @@ from collections import UserList as _UserList
 from pydna.utils import open_folder as _open_folder
 from builtins import __dict__ as _kw
 
-from .settings import load_settings
+from pydna_utils import load_settings
 
 cfg = load_settings()
 
@@ -75,6 +75,9 @@ class PrimerList(_UserList):
         else:
             self.path = path
             self.data = _parse_primers(self.path.read_text())[::-1]
+            for p in self.data:
+                p.annotations["molecule_type"] = "DNA"
+                p.annotations["topology"] = "linear"
         self.accessed_indices = []
         if identifier.isidentifier() and not _iskeyword(identifier) and identifier not in _kw:
             self.identifier = identifier
@@ -85,7 +88,8 @@ class PrimerList(_UserList):
         """Save indices of accessed items."""
         if isinstance(i, slice):
             result = self.__class__(self.data[i])
-            for ind in range(i.start, i.stop, i.step or 1):
+            start, stop, step = i.indices(len(self))
+            for ind in range(start, stop, step):
                 if ind not in self.accessed_indices:
                     self.accessed_indices.append(ind)
         else:
