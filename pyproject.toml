@@ -44,10 +44,11 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/BjornFJohansson/pydna-utils"
+Homepage = "https://github.com/pydna-group/pydna-utils"
 Documentation = "https://pydna-utils.readthedocs.io/"
-Repository = "https://github.com/BjornFJohansson/pydna-utils"
-Issues = "https://github.com/BjornFJohansson/pydna-utils/issues"
+Repository = "https://github.com/pydna-group/pydna-utils"
+Issues = "https://github.com/pydna-group/pydna-utils/issues"
+Changelog = "https://github.com/pydna-group/pydna-utils/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["poetry-core", "poetry-dynamic-versioning"]
