@@ -3,16 +3,18 @@
 
 import pytest
 from unittest import mock
+import subprocess
+from pydna_utils import editor
+from pydna.dseqrecord import Dseqrecord
 
 
 def test_editor_wo_features(monkeypatch):
-    import subprocess
-    from pydna import editor
+
 
     Popen = mock.MagicMock(name="subprocess.Popen")
     monkeypatch.setattr("subprocess.Popen", Popen)
     monkeypatch.setenv("pydna_ape", "path/to/ape")
-    from pydna.dseqrecord import Dseqrecord
+
 
     argument = Dseqrecord("ggatcc")
     editor.ape(argument)
@@ -20,8 +22,7 @@ def test_editor_wo_features(monkeypatch):
 
 
 def test_editor_with_feature_label(monkeypatch):
-    import subprocess
-    from pydna import editor
+
 
     Popen = mock.MagicMock(name="subprocess.Popen")
     monkeypatch.setattr("subprocess.Popen", Popen)
@@ -35,8 +36,7 @@ def test_editor_with_feature_label(monkeypatch):
 
 
 def test_editor_with_feature_note(monkeypatch):
-    import subprocess
-    from pydna import editor
+
 
     Popen = mock.MagicMock(name="subprocess.Popen")
     monkeypatch.setattr("subprocess.Popen", Popen)
@@ -51,13 +51,12 @@ def test_editor_with_feature_note(monkeypatch):
 
 
 def test_editor_with_feature_wo_label_and_note(monkeypatch):
-    import subprocess
-    from pydna import editor
+
 
     Popen = mock.MagicMock(name="subprocess.Popen")
     monkeypatch.setattr("subprocess.Popen", Popen)
     monkeypatch.setenv("pydna_ape", "path/to/ape")
-    from pydna.dseqrecord import Dseqrecord
+
 
     argument = Dseqrecord("ggatcc")
     argument.add_feature(2, 4)
