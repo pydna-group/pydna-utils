@@ -1,0 +1,22 @@
+LOCUS       TEST123                   20 bp    DNA     circular SYN 01-JAN-2000
+DEFINITION  Synthetic cache test record.
+ACCESSION   TEST123
+VERSION     TEST123.1
+KEYWORDS    .
+SOURCE      synthetic construct
+  ORGANISM  synthetic construct
+            other sequences; artificial sequences.
+FEATURES             Location/Qualifiers
+     source          1..20
+                     /organism="synthetic construct"
+     misc_feature    4..6
+                     /label="inside"
+     misc_feature    2..5
+                     /label="crosses_left"
+     misc_feature    complement(7..10)
+                     /label="reverse"
+     misc_feature    join(4..5,8..9)
+                     /label="joined"
+ORIGIN
+        1 acgttgcaag tcctaggtca
+//
