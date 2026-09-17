@@ -8,7 +8,7 @@ __license__ = "BSD"
 __maintainer__ = "Björn Johansson"
 __email__ = "bjorn_johansson@bio.uminho.pt"
 __status__ = "Development"  # "Production" #"Prototype"
-__version__ = "0.0.0"
+from ._version import __version__
 
 """Settings.
 
