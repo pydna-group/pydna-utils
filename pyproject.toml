@@ -4,10 +4,7 @@ version = "0.1.0"
 description = "Utility functions to ease interactive work with pydna."
 readme = "README.md"
 authors = [
-    { name = "Bjorn F. Johansson", email = "bjornjobb@gmail.com" }
-]
-maintainers = [
-    { name = "Bjorn F. Johansson", email = "bjornjobb@gmail.com" }
+    { name = "BjornFJohansson", email = "bjornjobb@gmail.com" }
 ]
 license = "BSD-3-Clause"
 license-files = ["LICENSE"]
