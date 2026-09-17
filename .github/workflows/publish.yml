@@ -1,0 +1,116 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pypi-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Test and build distributions
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      UV_MANAGED_PYTHON: "true"
+    steps:
+      - name: Check out release
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: Install Python
+        run: uv python install
+
+      - name: Check release tag format
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          uv run --no-project python - <<'PY'
+          import os
+          import re
+
+          tag = os.environ["RELEASE_TAG"]
+          if not re.fullmatch(r"v[0-9]+\.[0-9]+\.[0-9]+", tag):
+              raise SystemExit(f"Expected a release tag like v0.0.5; got {tag!r}")
+          PY
+
+      - name: Install dependencies
+        run: uv sync --locked --dev
+
+      - name: Run tests
+        run: uv run --no-sync pytest tests
+
+      - name: Build source distribution and wheel
+        run: uv build
+
+      - name: Verify distribution versions match the release tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          uv run --no-project python - <<'PY'
+          import os
+          import tarfile
+          import zipfile
+          from email.parser import BytesParser
+          from pathlib import Path
+
+          expected = os.environ["RELEASE_TAG"][1:]
+          wheel, = Path("dist").glob("*.whl")
+          sdist, = Path("dist").glob("*.tar.gz")
+          with zipfile.ZipFile(wheel) as archive:
+              name, = (n for n in archive.namelist() if n.endswith(".dist-info/METADATA"))
+              wheel_metadata = archive.read(name)
+          with tarfile.open(sdist) as archive:
+              name, = (n for n in archive.getnames() if n.count("/") == 1 and n.endswith("/PKG-INFO"))
+              sdist_metadata = archive.extractfile(name).read()
+          for path, metadata in [(wheel, wheel_metadata), (sdist, sdist_metadata)]:
+              actual = BytesParser().parsebytes(metadata)["Version"]
+              if actual != expected:
+                  raise SystemExit(f"{path}: expected {expected!r}, got {actual!r}")
+              print(f"{path}: version {actual}")
+          PY
+
+      - name: Upload distributions
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: distributions
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    name: Publish distributions
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pydna-utils/
+    permissions:
+      id-token: write
+    steps:
+      - name: Set up uv
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          enable-cache: false
+
+      - name: Download distributions
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: distributions
+          path: dist/
+
+      - name: Publish to PyPI
+        run: uv publish --trusted-publishing always
