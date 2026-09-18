@@ -1,151 +1,108 @@
-# ![icon](https://github.com/pydna-group/pydna-utils/blob/main/docs/_static/icon.png?raw=true)
+# pydna-utils
 
-pydna-utils is a package containing utilities for
-[pydna](https://github.com/pydna-group/pydna?tab=readme-ov-file)
-facilitating interactive use.
+Utilities for interactive work with [pydna](https://github.com/pydna-group/pydna):
 
-- open a Dsecrecord in the ApE plasmid editor or snapgene
-- a global PCR primer list
-- a global restriction enzyme list
-- cached access to genbank
+- Open DNA sequences in ApE or SnapGene.
+- Use a shared PCR primer list and restriction enzyme list.
+- Download and cache GenBank records and sequence regions.
 
-Install:
+## Installation
+
+Requires Python 3.12.7 or later, below 4.0.
 
 ```bash
 pip install pydna-utils
 ```
 
-pydna_utils creates a user settings file (`pydna_config.toml`) where user
-information and links to useful data can be placed.
+## Settings
 
-On my linux mint laptop, this is located at `/home/bjorn/.config/pydna/pydna_config.toml`.
-
-The platformdirs package is used to decide where this file should be located.
-
-The settings file is a [TOML](https://toml.io/en/) file and has this content
-by default:
-```
-pydna_ape_cmd = "/usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl"
-pydna_snapgene_cmd = "/opt/gslbiotech/snapgene/snapgene.sh"
-pydna_enzymes = "/home/bjorn/.ApE/Enzymes/LGM_group.txt"
-pydna_primers = "/home/bjorn/myvault/PRIMERS.md"
-pydna_email = "someone@example.com"
-pydna_ncbi_cache_dir = "/home/bjorn/.cache/pydna_utils"
-pydna_ncbi_expiration = "604800"
-```
-
-
-## pydna_utils.editor.ape starts the ApE plasmid editor.
+Settings are stored in `pydna_config.toml` in the user configuration directory
+chosen by `platformdirs` (normally `~/.config/pydna_utils/` on Linux).
+Create the file and set the paths for the features you use:
 
 ```python
->>> from pydna_utils.editor import ape
->>> from pydna.dseqrecord import Dseqrecord
->>> sequence = Dseqrecord("GGATCC")
->>> sequence.seq
-Dseq(-6)
-GGATCC
-CCTAGG
->>> ape(sequence)
+from pydna_utils import load_settings, save_settings, open_config_file
+
+settings = load_settings()
+settings.pydna_email = "you@example.com"
+settings.pydna_primers = "/path/to/primers.fasta"
+settings.pydna_enzymes = "/path/to/enzymes.txt"
+save_settings(settings)
+open_config_file()
 ```
 
-![ape](https://github.com/pydna-group/pydna-utils/blob/main/docs/_static/ape.png?raw=true)
+Set `pydna_ape_cmd` and `pydna_snapgene_cmd` to the commands that launch your
+installed editors. The defaults contain machine-specific paths, so adjust them
+before use. Restart your Python session after changing settings.
 
-
-## pydna_utils.myprimers.PrimerList enables a global primer list for pydna
-
-The primer list is typically a text file containing primer sequences in
-a format that pydna understands, such as FASTA.
-
-This feature is most useful if the laboratory keeps a plain text file with
-primer sequences for all lab members. As visible below, our list had 1821
-primers when this example was created.
-
-You may not want to ship this list with your pydna code. The list may be long
-nd contain mostly irrelevant primers. It may also have information that best be
-kept inside the lab. For this reason, PrimerList remembers which primers
-have been accessed in a particular session and can also create pydna code
-ready to be pasted into a pydna script or notebook that contain the relevant
-part of the list. See example below:
+To display settings or open the default cache directory:
 
 ```python
->>> from pydna_utils.myprimers import PrimerList
->>> pl = PrimerList()
->>> len(pl)
-1821
->>> pl[1]
-1_5CYC1clone 35-mer:5'-GATCGGCCGGATCCA..CCG-3'
->>> pl[2]
-2_3CYC1clon 35-mer:5'-CGATGTCGACTTAGA..AAG-3'
->>> print(pl[1].format("fasta"))
->>> print(pl[2].format("fasta"))
->>> pl.accessed
-[1_5CYC1clone 35-mer:5'-GATCGGCCGGATCCA..CCG-3',
- 2_3CYC1clon 35-mer:5'-CGATGTCGACTTAGA..AAG-3']
->>> pl.code(pl.accessed)
-from pydna.parsers import parse_primers
+from pydna_utils import tabulate_settings, open_cache_folder
 
-p = {}
-
-p[1], p[2] = parse_primers('''
-
->1_5CYC1clone 35-mer
-GATCGGCCGGATCCAAATGACTGAATTCAAGGCCG
-
->2_3CYC1clon 35-mer
-CGATGTCGACTTAGATCTCACAGGCTTTTTTCAAG
-
-''')
+print(tabulate_settings())
+open_cache_folder()
 ```
 
-## pydna_utils.myenzymes.myenzymes enables a global restriction enzyme batch
-
-pydna_enzymes should contain a path to a text file containing restriction
-enzyme names. No particular formatting is required, but the names have to
-be separated by white space and exactly as they appear on
-[REBASE](https://rebase.neb.com/rebase/rebase.html).
+## Open a sequence in an editor
 
 ```python
->>> from pydna_utils.myenzymes import myenzymes
->>> myenzymes
-RestrictionBatch(['AatII', 'Acc65I', 'AflII', 'AjiI', 'BamHI', 'BglI'])
+from pydna.dseqrecord import Dseqrecord
+from pydna_utils.editor import ape, snapgene
+
+sequence = Dseqrecord("GGATCC")
+ape(sequence)
+# snapgene(sequence)
 ```
 
+## Shared primer list
 
-## pydna_utils.genbank.genbank is a cached version of pydna.genbank.genbank
+Set `pydna_primers` to a text file containing primers in a format pydna can
+read, such as FASTA. Primers are loaded in reverse file order, so new primers
+can be added at the top. List indices start at zero.
 
 ```python
->>> from pydna_utils.genbank import genbank
->>> gb_sequence = genbank("A23695.1")
->>> gb_sequence
-Gbnk(-4 A23695.1)
->>> gb_sequence.seq
-Dseq(-4)
-AAAA
-TTTT
+from pydna_utils.myprimers import PrimerList
+
+primers = PrimerList()
+primer = primers[0]
+print(primer.format("fasta"))
+
+# Generate code containing only the primers accessed in this session.
+print(primers.code(primers.accessed))
 ```
 
-The settings `pydna_email, pydna_ncbi_cache_dir and pydna_ncbi_expiration`
-are important for how the cache works. 
-The user only needs to set the email as this is a NCBI requirement. 
+## Shared restriction enzyme list
 
-
+Set `pydna_enzymes` to a text file containing enzyme names recognized by
+Biopython, separated by whitespace, for example `BamHI EcoRI HindIII`.
 
 ```python
->>> import pydna_utils
->>> pydna_utils.get_settings()
-+-----------------------+-----------------------------------------+
-| Setting               | Value                                   |
-+-----------------------+-----------------------------------------+
-| pydna_ape_cmd         | /usr/bin/tclsh /home/bjorn/.ApE/ApE.tcl |
-| pydna_snapgene_cmd    | /opt/gslbiotech/snapgene/snapgene.sh    |
-| pydna_enzymes         | /home/bjorn/.ApE/Enzymes/LGM_group.txt  |
-| pydna_primers         | /home/bjorn/myvault/PRIMERS.md          |
-| pydna_email           | b*******b@gmail.com                     |
-| pydna_ncbi_cache_dir  | /home/bjorn/.cache/pydna_utils          |
-| pydna_ncbi_expiration | 604800                                  |
-+-----------------------+-----------------------------------------+
->>> from pydna_utils import open_config_file
->>> open_config_file()  # opens the config file for editing in system text editor.
->>> from pydna_utils import open_cache_folder
->>> open_cache_folder() # opens the cache folder in system file explorer.
+from pydna_utils.myenzymes import myenzymes
+
+print(myenzymes)
 ```
+
+## Cached GenBank access
+
+Set `pydna_email` to your email address before downloading. Use an accession
+including its version. Each call returns a fresh `Dseqrecord`.
+
+```python
+from pydna_utils.genbank import genbank
+
+record = genbank("CS570233.1")
+fragment = genbank("CS570233.1", seq_start=3, seq_stop=7)
+reverse = genbank("CS570233.1", seq_start=3, seq_stop=7, strand=2)
+```
+
+Coordinates are one-based and inclusive. Records are stored as GenBank files
+in `pydna_ncbi_cache_dir`, normally `~/.cache/pydna_utils/` on Linux. Cached
+records can serve requests for contained regions without another download.
+Local slicing retains only features fully contained in the requested region.
+
+Cached files do not expire or refresh automatically. The legacy
+`pydna_ncbi_expiration` setting has no effect on this cache.
+
+See [GenBank cache details](docs/genbank-cache.md) for cache behavior and how
+to refresh a record.
