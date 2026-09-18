@@ -62,9 +62,7 @@ are never published. Replacement failures leave existing fragments intact.
 
 ## Permanent snapshots
 
-**There is no expiration, TTL, age-based eviction, periodic refresh, or freshness
-check.** File timestamps are ignored. `pydna_ncbi_expiration` is retained for the
-legacy HTTP cache only and has no effect on this filesystem cache.
+**There is no expiration, periodic refresh, or freshness check.**
 
 Cached files preserve the downloaded sequence and annotations indefinitely.
 Annotation changes at NCBI are not tracked, even when the accession version is
@@ -91,11 +89,7 @@ boundaries. After replacement by a larger record, the same region may therefore
 have different boundary annotations. Results are independent objects, so caller
 modifications do not affect later reads.
 
-## Legacy cache and tests
-
-Importing this wrapper no longer monkeypatches HTTP functions. Explicit users of
-`pydna_utils.entrez_cache.enable_entrez_cache()` retain that separate legacy
-behavior. Existing SQLite files are neither migrated nor deleted.
+## Tests
 
 Install pytest in a development environment and run:
 

@@ -3,12 +3,13 @@
 Utilities for interactive work with [pydna](https://github.com/pydna-group/pydna):
 
 - Open DNA sequences in ApE or SnapGene.
-- Use a shared PCR primer list and restriction enzyme list.
+- PCR primer list 
+- Restriction enzyme list
 - Download and cache GenBank records and sequence regions.
 
 ## Installation
 
-Requires Python 3.12.7 or later, below 4.0.
+Requires Python 3.12.7 or later but below 4.0.
 
 ```bash
 pip install pydna-utils
@@ -17,25 +18,23 @@ pip install pydna-utils
 ## Settings
 
 Settings are stored in `pydna_config.toml` in the user configuration directory
-chosen by `platformdirs` (normally `~/.config/pydna_utils/` on Linux).
+chosen by `platformdirs`.
+
+Normally: 
+- `~/.config/pydna_utils/pydna_config.toml` on Linux
+- `%LOCALAPPDATA%\pydna_utils\pydna_utils\pydna_config.toml` on Windows
+- `~/Library/Application Support/pydna_utils/pydna_config.toml` on MacOS
+
 The recommended way to change settings is to open this file in your text
 editor and edit it directly:
 
 ```python
 from pydna_utils import open_config_file
 
-open_config_file()
+open_config_file()  # this opens the file in you default text editor
 ```
 
-On first use, create the file with the default settings before opening it:
-
-```python
-from pydna_utils import load_settings, save_settings
-
-save_settings(load_settings())
-```
-
-In the file, set your email and the paths for the features you use:
+Set your email and the paths for the features you use:
 
 ```toml
 pydna_email = "you@example.com"
@@ -53,8 +52,9 @@ To display settings or open the default cache directory:
 from pydna_utils import tabulate_settings, open_cache_folder
 
 print(tabulate_settings())
-open_cache_folder()
 ```
+
+
 
 ## Open a sequence in an editor
 
@@ -67,7 +67,7 @@ ape(sequence)
 # snapgene(sequence)
 ```
 
-## Shared primer list
+## Primer list
 
 Set `pydna_primers` to a text file containing primers in a format pydna can
 read, such as FASTA. Primers are loaded in reverse file order, so new primers
@@ -84,15 +84,37 @@ print(primer.format("fasta"))
 print(primers.code(primers.accessed))
 ```
 
+### Example primer list
+
+```fasta
+>2_example_primer
+GCTAGCTACGATCGATGCTA
+>1_example_primer
+CGATGTCGACTTAGATCTCAC
+>0_example_primer
+GATCGGCCGGATCCAAATGA
+```
+
+With this file, `primers[0]` returns `0_example_primer`.
+
+
 ## Shared restriction enzyme list
 
 Set `pydna_enzymes` to a text file containing enzyme names recognized by
-Biopython, separated by whitespace, for example `BamHI EcoRI HindIII`.
+Biopython, separated by whitespace and or newlines, for example `BamHI EcoRI HindIII`.
 
 ```python
 from pydna_utils.myenzymes import myenzymes
 
 print(myenzymes)
+```
+
+### Example enzyme list
+
+```text
+BamHI
+EcoRI
+HindIII
 ```
 
 ## Cached GenBank access
@@ -113,8 +135,7 @@ in `pydna_ncbi_cache_dir`, normally `~/.cache/pydna_utils/` on Linux. Cached
 records can serve requests for contained regions without another download.
 Local slicing retains only features fully contained in the requested region.
 
-Cached files do not expire or refresh automatically. The legacy
-`pydna_ncbi_expiration` setting has no effect on this cache.
+Cached files do not expire or refresh automatically.
 
 See [GenBank cache details](docs/genbank-cache.md) for cache behavior and how
 to refresh a record.
