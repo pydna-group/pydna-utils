@@ -1,4 +1,4 @@
-# pydna-utils
+# ![pydna-utils logo](docs/_static/icon.png)
 
 Utilities for interactive work with [pydna](https://github.com/pydna-group/pydna):
 
