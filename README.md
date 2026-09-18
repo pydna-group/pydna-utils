@@ -18,17 +18,29 @@ pip install pydna-utils
 
 Settings are stored in `pydna_config.toml` in the user configuration directory
 chosen by `platformdirs` (normally `~/.config/pydna_utils/` on Linux).
-Create the file and set the paths for the features you use:
+The recommended way to change settings is to open this file in your text
+editor and edit it directly:
 
 ```python
-from pydna_utils import load_settings, save_settings, open_config_file
+from pydna_utils import open_config_file
 
-settings = load_settings()
-settings.pydna_email = "you@example.com"
-settings.pydna_primers = "/path/to/primers.fasta"
-settings.pydna_enzymes = "/path/to/enzymes.txt"
-save_settings(settings)
 open_config_file()
+```
+
+On first use, create the file with the default settings before opening it:
+
+```python
+from pydna_utils import load_settings, save_settings
+
+save_settings(load_settings())
+```
+
+In the file, set your email and the paths for the features you use:
+
+```toml
+pydna_email = "you@example.com"
+pydna_primers = "/path/to/primers.fasta"
+pydna_enzymes = "/path/to/enzymes.txt"
 ```
 
 Set `pydna_ape_cmd` and `pydna_snapgene_cmd` to the commands that launch your
