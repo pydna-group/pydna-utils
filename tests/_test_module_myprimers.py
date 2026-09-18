@@ -19,7 +19,6 @@ def settings_file(tmp_path_factory):
                         pydna_primers = "/home/bjorn/myvault/PRIMERS.md"
                         pydna_email = "bjornjobb@gmail.com"
                         pydna_ncbi_cache_dir = "/home/bjorn/.cache/pydna_utils"
-                        pydna_ncbi_expiration = "604800" # seconds
                         """))
     return p
 

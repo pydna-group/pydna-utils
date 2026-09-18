@@ -2,7 +2,6 @@
 
 Coordinates in filenames and requests are one-based and inclusive. Files are
 forward-strand snapshots; only fully contained features survive local slicing.
-The legacy ``pydna_ncbi_expiration`` setting does not apply to this cache.
 """
 
 from contextlib import contextmanager

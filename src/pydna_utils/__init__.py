@@ -100,9 +100,6 @@ class Settings(BaseConfig):
     pydna_ncbi_cache_dir: str = Field(
         default=str(USER_CACHE_DIR)
     )
-    pydna_ncbi_expiration: str = Field(
-        default= str(7 * 24 * 3600) # seven days
-    )
     # ConfZ v2: use FileSource and mark it optional for first run
     CONFIG_SOURCES = FileSource(file=CONFIG_PATH, optional=True)
 
